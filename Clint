@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <ctime>
+#include <queue>
 using namespace std;
 
 //Function declaration
@@ -9,10 +10,12 @@ void PrintTable();
 int SpaceFounder();
 
 
-//Global variable
-int p [10][6];
+//Global variable declared outside the main
+long p [50][6];
 int vacant = 0;
-int* ptr[10];
+long* ptr[50];
+
+
 
 
 int main()
@@ -23,36 +26,45 @@ int main()
     int *r = job;
     while(counter < 10){
 
-        //job creation with some random numbers
+        /*created 10 jobs with some random numbers
+         *for testing purpose only.
+         */
         cout << "Job[" << counter << "] ----";
         for(int i = 0; i < 6; i++){
             job[i] = rand() % 101;
             cout << job[i] << " ";
         }
         cout << endl;
-        Crint(r); //send job to crint as they are created
+        Crint(r); //send job to Crint(Job Table) as they are created
         counter++;
     }
-    
-    //p[5] and p[9] are finished and change the job# to 0 to make them available
+
+    /*job p[5] and p[9] are finished and change the job# to 0 to
+     *make them available for other incoming job. We agreed to
+     *turn the first column to zeros as a bit
+    */
     p[5][0] = 0;
     p[9][0] = 0;
-    
-    
-    int newJob[] = {1, 2, 3, 4, 5, 6}; //create new test job
+
+    /*create new job to test if the search algorithm works
+     *Expected condition: newJob should be stored in p[5]
+     *because it's vacant
+     */
+
+    int newJob[] = {1, 2, 3, 4, 5, 6};
 
     Crint(newJob); //send the new job to crint
-    PrintTable();
+    PrintTable();  //test print to see the table again
     return 0;
 }
 
-//this function searches for empty space from the job table
+//this function searches for empty space in the job table
 int SpaceFounder(){
     int temp;
-    for(int i =0; i<10; i++){
-        if(p[i][0] == 0){
+    for(int i =0; i<50; i++){
+        if(p[i][0] == 0){ //Only check the first column of the array
             temp = i;
-            break;
+            break; //stop searching if you find a space
         }
         else
             temp = -1; // spaceFounder return -1 if space is not found from the 50 x 6 size
@@ -62,7 +74,7 @@ int SpaceFounder(){
 
 void Crint(int *q){
 
-   vacant = SpaceFounder();
+   vacant = SpaceFounder(); //index of the empty space is returned to vacant
    if(vacant == -1)
     throw exception();
    else
@@ -70,11 +82,12 @@ void Crint(int *q){
         p[vacant][j] = q[j];
     }
     cout << endl;
-    vacant++;
+
 }
 
+//not part of the project but to see what's going on.
 void PrintTable(){
-    for(int i = 0; i < 10; i++){
+    for(int i = 0; i < 50; i++){
         cout << "Job[" << i << "] ----";
         for(int j = 0; j < 6; j++)
             cout << p[i][j] << " ";
@@ -82,3 +95,4 @@ void PrintTable(){
     }
 
 }
+
